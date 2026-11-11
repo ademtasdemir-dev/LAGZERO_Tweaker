@@ -1,0 +1,50 @@
+╔════════════════════════════════════════════════════════════════╗
+║         LAGZERO_TWEAKER - GITHUB SETUP / BUILD-INFO            ║
+╚════════════════════════════════════════════════════════════════╝
+
+Repo: https://github.com/ademtasdemir-dev/LAGZERO_Tweaker
+
+REPO-STRUKTUR
+═══════════════════════════════════════════════════════════════
+
+  /                        → Quellcode, Skripte und Doku
+    lagzero_tweaker.py     → Hauptprogramm
+    requirements.txt       → Python-Abhängigkeiten
+    BUILD.bat / BUILD_EXE.bat / build_exe.py → lokale EXE-Builds
+    RELEASE_PACKAGE.bat    → ZIP-Paket für die Verteilung
+    START_AS_ADMIN.bat     → Start mit Adminrechten (Python)
+  /.github/workflows/
+    build.yml              → GitHub-Actions-Workflow (NUR diese
+                             Datei gehört in diesen Ordner!)
+
+AUTOMATISCHER BUILD (GitHub Actions)
+═══════════════════════════════════════════════════════════════
+
+Bei jedem Push auf main baut GitHub automatisch die EXE:
+
+1. Gehe im Repo auf den "Actions"-Tab
+2. Workflow "Build LAGZERO_Tweaker EXE" anklicken
+3. Grünes Häkchen = Erfolg
+4. Unten im Run unter "Artifacts" → "LAGZERO_Tweaker" herunterladen
+
+RELEASE ERSTELLEN
+═══════════════════════════════════════════════════════════════
+
+Ein Release wird über einen Git-Tag ausgelöst (Tag muss mit "v"
+beginnen, z. B. v0.3.0):
+
+  git tag v0.3.0
+  git push origin v0.3.0
+
+Der Workflow baut dann die EXE und hängt sie automatisch mit
+generierten Release-Notes an das Release an.
+
+Alternativ im Browser: Releases → "Draft a new release" →
+neuen Tag "v0.3.0" anlegen → "Publish release".
+
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+Build schlägt fehl?
+→ "Actions"-Tab → roten Run anklicken → Fehlermeldung lesen.
+→ Häufigste Ursache: fehlender Import oder Tippfehler im Code.

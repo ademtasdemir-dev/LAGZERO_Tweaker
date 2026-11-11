@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Release-Pakete
+LAGZERO_v*_BETA/
+LAGZERO_v*.zip
+LAGZERO_Tweaker.exe

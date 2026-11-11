@@ -58,6 +58,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
+REM 5. COPY EXE TO THIS DIRECTORY (PyInstaller puts it in dist\)
+copy /y "dist\LAGZERO_Tweaker.exe" "LAGZERO_Tweaker.exe" >nul
+
 echo.
 echo ================================
 echo BUILD SUCCESS!

@@ -116,10 +116,10 @@ def backup(force=False):
         except Exception:
             pass  # corrupt/unreadable backup: fall through and recreate it
     data={'created':time.strftime('%Y-%m-%d %H:%M:%S'),'values':{
-      'game_mode':reg_query(r'HKCU\\Software\\Microsoft\\GameBar','AllowAutoGameMode'),
-      'gamedvr_enabled':reg_query(r'HKCU\\System\\GameConfigStore','GameDVR_Enabled'),
-      'app_capture':reg_query(r'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR','AppCaptureEnabled'),
-      'hags':reg_query(r'HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers','HwSchMode'),
+      'game_mode':reg_query(r'HKCU\Software\Microsoft\GameBar','AllowAutoGameMode'),
+      'gamedvr_enabled':reg_query(r'HKCU\System\GameConfigStore','GameDVR_Enabled'),
+      'app_capture':reg_query(r'HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR','AppCaptureEnabled'),
+      'hags':reg_query(r'HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers','HwSchMode'),
       'power_scheme':active_power_guid(),
     }}
     BACKUP_FILE.write_text(json.dumps(data,indent=2),encoding='utf-8')
@@ -131,16 +131,16 @@ def apply_tweaks(selected):
     create_restore_point()
     results=[]
     if selected.get('game_mode'):
-        r=reg_set(r'HKCU\\Software\\Microsoft\\GameBar','AllowAutoGameMode','REG_DWORD',1)
+        r=reg_set(r'HKCU\Software\Microsoft\GameBar','AllowAutoGameMode','REG_DWORD',1)
         if r.returncode: raise RuntimeError('Game Mode konnte nicht gesetzt werden.')
         results.append('Game Mode ON')
     if selected.get('gamedvr'):
-        for p,n in [(r'HKCU\\System\\GameConfigStore','GameDVR_Enabled'),(r'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR','AppCaptureEnabled')]:
+        for p,n in [(r'HKCU\System\GameConfigStore','GameDVR_Enabled'),(r'HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR','AppCaptureEnabled')]:
             r=reg_set(p,n,'REG_DWORD',0)
             if r.returncode: raise RuntimeError('Game DVR konnte nicht gesetzt werden.')
         results.append('Game DVR OFF')
     if selected.get('hags'):
-        r=reg_set(r'HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers','HwSchMode','REG_DWORD',2)
+        r=reg_set(r'HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers','HwSchMode','REG_DWORD',2)
         if r.returncode: raise RuntimeError('HAGS konnte nicht gesetzt werden.')
         results.append('HAGS ON (Neustart)')
     if selected.get('ultimate'):
@@ -162,10 +162,10 @@ def restore():
     def rr(p,n,v):
         if v is None: reg_delete(p,n)
         else: reg_set(p,n,'REG_DWORD',int(v,0) if str(v).lower().startswith('0x') else int(v))
-    rr(r'HKCU\\Software\\Microsoft\\GameBar','AllowAutoGameMode',d.get('game_mode'))
-    rr(r'HKCU\\System\\GameConfigStore','GameDVR_Enabled',d.get('gamedvr_enabled'))
-    rr(r'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR','AppCaptureEnabled',d.get('app_capture'))
-    rr(r'HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers','HwSchMode',d.get('hags'))
+    rr(r'HKCU\Software\Microsoft\GameBar','AllowAutoGameMode',d.get('game_mode'))
+    rr(r'HKCU\System\GameConfigStore','GameDVR_Enabled',d.get('gamedvr_enabled'))
+    rr(r'HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR','AppCaptureEnabled',d.get('app_capture'))
+    rr(r'HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers','HwSchMode',d.get('hags'))
     if d.get('power_scheme'): cmd(['powercfg','/setactive',d['power_scheme']])
     return 'Backup wiederhergestellt.'
 

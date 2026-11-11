@@ -3,55 +3,43 @@ name: Build LAGZERO_Tweaker EXE
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: windows-latest
-    
+
     steps:
-    - uses: actions/checkout@v3
-    
+    - uses: actions/checkout@v5
+
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install psutil pyinstaller
-    
+        pip install -r requirements.txt
+        pip install pyinstaller
+
     - name: Build EXE with PyInstaller
-      run: |
-        cd LAGZERO_Tweaker
-        pyinstaller --onefile --windowed --name LAGZERO_Tweaker lagzero_tweaker.py
-    
+      run: pyinstaller --noconfirm --clean --onefile --windowed --name LAGZERO_Tweaker lagzero_tweaker.py
+
     - name: Upload EXE as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: LAGZERO_Tweaker
-        path: LAGZERO_Tweaker/dist/LAGZERO_Tweaker.exe
-    
+        path: dist/LAGZERO_Tweaker.exe
+
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-    
-    - name: Upload Release Asset
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: LAGZERO_Tweaker/dist/LAGZERO_Tweaker.exe
-        asset_name: LAGZERO_Tweaker.exe
-        asset_content_type: application/octet-stream
+        files: dist/LAGZERO_Tweaker.exe
+        generate_release_notes: true
